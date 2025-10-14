@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "163264912373",
+    "project_id": "cat-app-4922a",
+    "storage_bucket": "cat-app-4922a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:163264912373:android:0bfeba65cfbcc4138b5ebc",
+        "android_client_info": {
+          "package_name": "com.example.animallover"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZsDrdW4qWc37JGCnJgJ2HUnftMcuaAgw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

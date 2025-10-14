@@ -1,58 +1,76 @@
 package com.example.animallover
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var navController: NavController
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
-        // Set default fragment
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HomeFragment())
-                .commit()
+        drawerLayout = findViewById(R.id.drawer_layout)
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                    as NavHostFragment
+        navController = navHostFragment.navController
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.communityFragment,
+                R.id.eventFragment
+            ),
+            drawerLayout
+        )
+
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        navView?.setNavigationItemSelectedListener { menuItem ->
+            if (menuItem.itemId == R.id.settingFragment || menuItem.itemId == R.id.helpFragment) {
+                navController.navigate(menuItem.itemId)
+            } else {
+                NavigationUI.onNavDestinationSelected(menuItem, navController)
+            }
+
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
         }
 
-        // Handle bottom navigation item clicks
-        bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_home -> {
-                    replaceFragment(HomeFragment())
-                    true
-                }
-                R.id.navigation_popular -> {
-                    // For now, just show home fragment
-                    // You can create other fragments later
-                    replaceFragment(HomeFragment())
-                    true
-                }
-                R.id.navigation_add -> {
-                    replaceFragment(HomeFragment())
-                    true
-                }
-                R.id.navigation_chat -> {
-                    replaceFragment(HomeFragment())
-                    true
-                }
-                R.id.navigation_profile -> {
-                    replaceFragment(HomeFragment())
-                    true
-                }
-                else -> false
+        bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.settingFragment || destination.id == R.id.helpFragment || destination.id == R.id.registerFragment || destination.id == R.id.loginFragment) {
+                bottomNavigationView.visibility = View.GONE
+            } else {
+                bottomNavigationView.visibility = View.VISIBLE
             }
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

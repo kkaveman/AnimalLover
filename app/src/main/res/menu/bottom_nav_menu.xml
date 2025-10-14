@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
         android:title="Home" />
 
     <item
-        android:id="@+id/navigation_popular"
-        android:icon="@drawable/ic_trending"
-        android:title="Popular" />
+        android:id="@+id/eventFragment"
+        android:icon="@drawable/ic_calendar"
+        android:title="Events" />
 
     <item
-        android:id="@+id/navigation_add"
-        android:icon="@drawable/ic_add"
-        android:title="Add" />
+        android:id="@+id/communityFragment"
+        android:icon="@drawable/ic_community"
+        android:title="community" />
 
     <item
         android:id="@+id/navigation_chat"

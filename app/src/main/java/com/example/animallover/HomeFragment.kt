@@ -1,59 +1,114 @@
 package com.example.animallover
 
+import android.graphics.Shader
+import android.graphics.LinearGradient
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.core.view.doOnLayout
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var userProfileImageView: ShapeableImageView
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        userProfileImageView = view.findViewById(R.id.user_profile)
+
+        loadUserProfileImage()
+
+        val tvTitle = view.findViewById<TextView>(R.id.tvTitle)
+
+        // Get the gradient colors
+        val startColor = ContextCompat.getColor(requireContext(), R.color.header_gradient_start)
+        val endColor = ContextCompat.getColor(requireContext(), R.color.header_gradient_end)
+
+        // 🔥 Apply gradient shader ONLY after layout is complete
+        tvTitle.doOnLayout { view ->
+            val width = view.width
+            val height = view.height
+
+            if (width > 0 && height > 0) {
+                // Create a horizontal gradient (left to right)
+                val shader = LinearGradient(
+                    0f, 0f,                          // Start: top-left corner
+                    width.toFloat(), 0f,             // End: top-right corner
+                    intArrayOf(startColor, endColor), // Colors to blend
+                    null,                            // Positions (null = evenly spaced)
+                    Shader.TileMode.CLAMP            // How to tile beyond edges
+                )
+
+                // Apply the shader to the text paint
+                tvTitle.paint.shader = shader
+
+                // Optional: Debug log to confirm it worked
+                println("✅ Gradient applied to tvTitle: width=$width, height=$height")
+            } else {
+                println("⚠️ tvTitle width is 0 — layout not ready yet.")
             }
+        }
+
+        userProfileImageView.setOnClickListener {
+            if (firebaseAuth.currentUser != null) {
+                // User is signed in, navigate to profile
+                findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+            } else {
+                // User is not signed in, navigate to register
+                findNavController().navigate(R.id.action_homeFragment_to_registerFragment)
+            }
+        }
+    }
+
+    private fun loadUserProfileImage() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            val usersRef = FirebaseDatabase.getInstance("https://cat-app-4922a-default-rtdb.asia-southeast1.firebasedatabase.app").reference.child("Users").child(currentUser.uid)
+            usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val imageUrl = snapshot.child("image").getValue(String::class.java)
+                    if (!imageUrl.isNullOrEmpty()) {
+                        Glide.with(this@HomeFragment)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.user_2) // Optional: a placeholder while loading
+                            .error(R.drawable.user_2) // Optional: an error image
+                            .into(userProfileImageView)
+                    } else {
+                        // No image URL in database, load local drawable
+                        userProfileImageView.setImageResource(R.drawable.user_2)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Failed to read value, so load default
+                    userProfileImageView.setImageResource(R.drawable.user_2)
+                }
+            })
+        } else {
+            // User is not logged in, load local drawable
+            userProfileImageView.setImageResource(R.drawable.user_2)
+        }
     }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="0"
+                android:startColor="#FB923C"
+                android:centerColor="#F472B6"
+                android:endColor="#F472B6"
+                android:type="linear" />
+
+            <!-- Make the BOTTOM corners VERY large → creates a FLAT, shallow curve -->
+            <corners
+                android:bottomLeftRadius="1000dp"
+                android:bottomRightRadius="1000dp"
+                android:topLeftRadius="0dp"
+                android:topRightRadius="0dp" />
+        </shape>
+    </item>
+</layer-list>

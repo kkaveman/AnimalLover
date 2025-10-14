@@ -16,4 +16,15 @@
     <color name="light_gray">#808080</color>
     <color name="text_light">#E0E0E0</color>
 
+    <color name="orange_primary">#FB923C</color>
+    <color name="pink_primary">#F472B6</color>
+    <color name="purple_primary">#C084FC</color>
+    <color name="pink_light">#FCE7F3</color>
+    <color name="orange_light">#FED7AA</color>
+
+    <color name="header_gradient_start">#FFFFFF</color>
+    <color name="header_gradient_end">#FFC1DF</color>
+    <color name="gradient_center">#F472B6</color>
+    <color name="secondary">#2C2C2C</color>
+    <color name="light_blue">#87CEEB</color>
 </resources>
