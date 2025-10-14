@@ -11,6 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.core.view.doOnLayout
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
@@ -80,6 +82,26 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.action_homeFragment_to_registerFragment)
             }
         }
+
+        // Setup Events RecyclerView
+        val eventsRecyclerView = view.findViewById<RecyclerView>(R.id.eventsRecyclerView)
+        eventsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        eventsRecyclerView.isNestedScrollingEnabled = false // Fix for scrolling issue
+
+        val events = listOf(
+            Event(R.drawable.ai_cat, "Cat Show 2024"),
+            Event(R.drawable.cat_event_placeholder, "Adoption Day"),
+            Event(R.drawable.cat_event_placeholder, "Feline Health Webinar"),
+            Event(R.drawable.cat_event_placeholder, "Cute Cat Contest"),
+            Event(R.drawable.cat_event_placeholder, "Community Meetup")
+        )
+
+        // Pass the list of events (max 3) and the navigation action to the adapter.
+        val eventAdapter = EventAdapter(events.take(3)) {
+            // This is the lambda that gets called when the "See All" button is clicked.
+            findNavController().navigate(R.id.action_homeFragment_to_eventFragment)
+        }
+        eventsRecyclerView.adapter = eventAdapter
     }
 
     private fun loadUserProfileImage() {

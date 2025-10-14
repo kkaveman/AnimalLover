@@ -41,7 +41,9 @@ class MainActivity : AppCompatActivity() {
             setOf(
                 R.id.homeFragment,
                 R.id.communityFragment,
-                R.id.eventFragment
+                R.id.eventFragment,   //dont add fragments here to have the backstack/back button like setting fragment
+                R.id.profileFragment,
+
             ),
             drawerLayout
         )
