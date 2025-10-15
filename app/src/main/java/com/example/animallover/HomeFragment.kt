@@ -12,9 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.doOnLayout
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.imageview.ShapeableImageView
+import com.example.animallover.data.CommunityPost
+import com.example.animallover.databinding.FragmentHomeBinding
+import com.example.animallover.ui.adapters.CommunityPostAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,71 +24,47 @@ import com.google.firebase.database.ValueEventListener
 
 class HomeFragment : Fragment() {
 
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var userProfileImageView: ShapeableImageView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        userProfileImageView = view.findViewById(R.id.user_profile)
 
         loadUserProfileImage()
+        applyGradientToTitle()
+        setupClickListeners()
+        setupEventsRecyclerView()
+        setupPopularPostsRecyclerView()
+    }
 
-        val tvTitle = view.findViewById<TextView>(R.id.tvTitle)
+    private fun setupPopularPostsRecyclerView() {
+        val popularPosts = listOf(
+            CommunityPost("1", "CatLover123", "", "Just adopted this little fella!", "https://i.imgur.com/4qZzW8T.jpeg", 150, 23),
+            CommunityPost("2", "CrazyCatLady", "", "My cat does the funniest things.", "https://i.imgur.com/SO39L6s.jpeg", 230, 45),
+            CommunityPost("3", "MeowMix", "", "Does anyone else's cat do this?", "https://i.imgur.com/gA3tF5C.jpeg", 180, 30)
+        )
 
-        // Get the gradient colors
-        val startColor = ContextCompat.getColor(requireContext(), R.color.header_gradient_start)
-        val endColor = ContextCompat.getColor(requireContext(), R.color.header_gradient_end)
+        val adapter = CommunityPostAdapter(popularPosts)
+        binding.popularPostsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.popularPostsRecyclerView.adapter = adapter
+        binding.popularPostsRecyclerView.isNestedScrollingEnabled = false // Important for smooth scrolling inside NestedScrollView
+    }
 
-        // 🔥 Apply gradient shader ONLY after layout is complete
-        tvTitle.doOnLayout { view ->
-            val width = view.width
-            val height = view.height
-
-            if (width > 0 && height > 0) {
-                // Create a horizontal gradient (left to right)
-                val shader = LinearGradient(
-                    0f, 0f,                          // Start: top-left corner
-                    width.toFloat(), 0f,             // End: top-right corner
-                    intArrayOf(startColor, endColor), // Colors to blend
-                    null,                            // Positions (null = evenly spaced)
-                    Shader.TileMode.CLAMP            // How to tile beyond edges
-                )
-
-                // Apply the shader to the text paint
-                tvTitle.paint.shader = shader
-
-                // Optional: Debug log to confirm it worked
-                println("✅ Gradient applied to tvTitle: width=$width, height=$height")
-            } else {
-                println("⚠️ tvTitle width is 0 — layout not ready yet.")
-            }
-        }
-
-        userProfileImageView.setOnClickListener {
-            if (firebaseAuth.currentUser != null) {
-                // User is signed in, navigate to profile
-                findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
-            } else {
-                // User is not signed in, navigate to register
-                findNavController().navigate(R.id.action_homeFragment_to_registerFragment)
-            }
-        }
-
-        // Setup Events RecyclerView
-        val eventsRecyclerView = view.findViewById<RecyclerView>(R.id.eventsRecyclerView)
-        eventsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        eventsRecyclerView.isNestedScrollingEnabled = false // Fix for scrolling issue
-
+    private fun setupEventsRecyclerView() {
+        binding.eventsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val events = listOf(
             Event(R.drawable.ai_cat, "Cat Show 2024"),
             Event(R.drawable.cat_event_placeholder, "Adoption Day"),
@@ -96,12 +73,35 @@ class HomeFragment : Fragment() {
             Event(R.drawable.cat_event_placeholder, "Community Meetup")
         )
 
-        // Pass the list of events (max 3) and the navigation action to the adapter.
         val eventAdapter = EventAdapter(events.take(3)) {
-            // This is the lambda that gets called when the "See All" button is clicked.
             findNavController().navigate(R.id.action_homeFragment_to_eventFragment)
         }
-        eventsRecyclerView.adapter = eventAdapter
+        binding.eventsRecyclerView.adapter = eventAdapter
+    }
+
+    private fun setupClickListeners() {
+        binding.userProfile.setOnClickListener {
+            if (firebaseAuth.currentUser != null) {
+                findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+            } else {
+                findNavController().navigate(R.id.action_homeFragment_to_registerFragment)
+            }
+        }
+    }
+
+    private fun applyGradientToTitle() {
+        val tvTitle = binding.tvTitle
+        val startColor = ContextCompat.getColor(requireContext(), R.color.header_gradient_start)
+        val endColor = ContextCompat.getColor(requireContext(), R.color.header_gradient_end)
+
+        tvTitle.doOnLayout { view ->
+            val width = view.width.toFloat()
+            if (width > 0) {
+                val shader = LinearGradient(0f, 0f, width, 0f, intArrayOf(startColor, endColor), null, Shader.TileMode.CLAMP)
+                tvTitle.paint.shader = shader
+                tvTitle.invalidate() // Redraw the view with the shader
+            }
+        }
     }
 
     private fun loadUserProfileImage() {
@@ -114,23 +114,25 @@ class HomeFragment : Fragment() {
                     if (!imageUrl.isNullOrEmpty()) {
                         Glide.with(this@HomeFragment)
                             .load(imageUrl)
-                            .placeholder(R.drawable.user_2) // Optional: a placeholder while loading
-                            .error(R.drawable.user_2) // Optional: an error image
-                            .into(userProfileImageView)
+                            .placeholder(R.drawable.cat_icon)
+                            .error(R.drawable.cat_icon)
+                            .into(binding.userProfile)
                     } else {
-                        // No image URL in database, load local drawable
-                        userProfileImageView.setImageResource(R.drawable.user_2)
+                        binding.userProfile.setImageResource(R.drawable.cat_icon)
                     }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    // Failed to read value, so load default
-                    userProfileImageView.setImageResource(R.drawable.user_2)
+                    binding.userProfile.setImageResource(R.drawable.cat_icon)
                 }
             })
         } else {
-            // User is not logged in, load local drawable
-            userProfileImageView.setImageResource(R.drawable.user_2)
+            binding.userProfile.setImageResource(R.drawable.cat_icon)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null // Important to avoid memory leaks
     }
 }

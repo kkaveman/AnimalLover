@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--fragment_home-->
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -136,80 +137,16 @@
             android:textSize="20sp"
             android:textStyle="bold"/>
 
-        <!-- Popular Post Card -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/popularPostCardView"
+        <!-- Popular Posts RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/popularPostsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/tvPostContent"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Found this cute little fella today! Isn't he adorable? #cats #cute"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
-
-                <ImageView
-                    android:id="@+id/ivLikeIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginTop="12dp"
-                    android:src="@drawable/ic_favorite"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvPostContent" />
-
-                <TextView
-                    android:id="@+id/tvLikeCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="15"
-                    android:textColor="@color/black_grey"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@id/ivLikeIcon"
-                    app:layout_constraintBottom_toBottomOf="@id/ivLikeIcon"
-                    app:layout_constraintTop_toTopOf="@id/ivLikeIcon" />
-
-                <ImageView
-                    android:id="@+id/ivCommentIcon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_comment"
-                    app:layout_constraintStart_toEndOf="@id/tvLikeCount"
-                    app:layout_constraintTop_toTopOf="@id/ivLikeIcon"
-                    app:layout_constraintBottom_toBottomOf="@id/ivLikeIcon" />
-
-                <TextView
-                    android:id="@+id/tvCommentCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="4"
-                    android:textColor="@color/black_grey"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@id/ivCommentIcon"
-                    app:layout_constraintBottom_toBottomOf="@id/ivCommentIcon"
-                    app:layout_constraintTop_toTopOf="@id/ivCommentIcon" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+            android:nestedScrollingEnabled="false"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_community_post"
+            tools:itemCount="3" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
