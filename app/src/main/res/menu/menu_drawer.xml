@@ -12,6 +12,9 @@
             android:title="@string/setting"
             android:checkable="false" /> <!-- Make this item specifically non-checkable -->
     </group>
+
+
+
     <group
         android:id="@+id/menu_bottom"
         android:checkableBehavior="single"> <!-- This group can remain checkable if other items need it -->
@@ -21,4 +24,18 @@
             android:title="@string/help"
             android:checkable="false" /> <!-- Make this item specifically non-checkable -->
     </group>
+
+
+    <group
+        android:id="@+id/menu_logout_or_login"
+        android:checkableBehavior="single"> <!-- This group can remain checkable if other items need it -->
+        <item
+            android:id="@+id/loginFragment"
+            android:icon="@drawable/ic_logout"
+            android:title="login or logout"
+            android:checkable="false" /> <!-- Make this item specifically non-checkable -->
+    </group>
+
+
+
 </menu>

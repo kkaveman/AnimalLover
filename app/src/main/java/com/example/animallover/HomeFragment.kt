@@ -13,9 +13,11 @@ import androidx.core.view.doOnLayout
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.animallover.data.CommunityPost
+import com.example.animallover.data.model.CommunityPost
+import com.example.animallover.data.model.Event
 import com.example.animallover.databinding.FragmentHomeBinding
 import com.example.animallover.ui.adapters.CommunityPostAdapter
+import com.example.animallover.ui.adapters.EventAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -43,7 +45,7 @@ class HomeFragment : Fragment() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        loadUserProfileImage()
+        loadUserProfile()
         applyGradientToTitle()
         setupClickListeners()
         setupEventsRecyclerView()
@@ -84,7 +86,7 @@ class HomeFragment : Fragment() {
             if (firebaseAuth.currentUser != null) {
                 findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
             } else {
-                findNavController().navigate(R.id.action_homeFragment_to_registerFragment)
+                findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
             }
         }
     }
@@ -104,22 +106,31 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun loadUserProfileImage() {
+    private fun loadUserProfile() {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             val usersRef = FirebaseDatabase.getInstance("https://cat-app-4922a-default-rtdb.asia-southeast1.firebasedatabase.app").reference.child("Users").child(currentUser.uid)
             usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val imageUrl = snapshot.child("image").getValue(String::class.java)
-                    if (!imageUrl.isNullOrEmpty()) {
-                        Glide.with(this@HomeFragment)
-                            .load(imageUrl)
-                            .placeholder(R.drawable.cat_icon)
-                            .error(R.drawable.cat_icon)
-                            .into(binding.userProfile)
-                    } else {
-                        binding.userProfile.setImageResource(R.drawable.cat_icon)
+
+                    if (snapshot.exists()){
+                        val imageUrl = snapshot.child("image").getValue(String::class.java)
+                        val username = snapshot.child("username").getValue(String::class.java)
+
+                        binding.tvSubtitle.setText("Hello $username!")
+
+                        if (!imageUrl.isNullOrEmpty()) {
+                            Glide.with(this@HomeFragment)
+                                .load(imageUrl)
+                                .placeholder(R.drawable.cat_icon)
+                                .error(R.drawable.cat_icon)
+                                .into(binding.userProfile)
+                        } else {
+                            binding.userProfile.setImageResource(R.drawable.cat_icon)
+                        }
+
                     }
+
                 }
 
                 override fun onCancelled(error: DatabaseError) {

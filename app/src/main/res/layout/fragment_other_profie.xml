@@ -132,7 +132,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:enabled="false"
             android:text="YourUsername"
             android:textColor="?android:textColorPrimary"
             android:textSize="16sp"
@@ -167,18 +166,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bio">
 
-            <!-- Edit Profile Button (visible when viewing own profile) -->
-            <Button
-                android:id="@+id/btn_edit_profile"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+            <!-- Follow Button (visible when viewing other's profile) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_follow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Edit Profile"
-                android:visibility="visible" />
+                android:text="Follow"
+                android:textAllCaps="false"
+                app:cornerRadius="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_unfollow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Follow"
+                android:textAllCaps="false"
+                app:cornerRadius="8dp"
+                android:visibility="gone"/>
+
 
 
         </LinearLayout>
+
 
         <!-- Divider -->
         <View

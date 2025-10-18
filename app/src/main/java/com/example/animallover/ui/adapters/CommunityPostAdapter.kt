@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.animallover.R
-import com.example.animallover.data.CommunityPost
+import com.example.animallover.data.model.CommunityPost
 import com.example.animallover.databinding.ItemCommunityPostBinding
 
 class CommunityPostAdapter(private val posts: List<CommunityPost>) : RecyclerView.Adapter<CommunityPostAdapter.PostViewHolder>() {

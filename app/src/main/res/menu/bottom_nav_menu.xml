@@ -13,10 +13,10 @@
     <item
         android:id="@+id/communityFragment"
         android:icon="@drawable/ic_community"
-        android:title="community" />
+        android:title="Community" />
 
     <item
-        android:id="@+id/navigation_chat"
-        android:icon="@drawable/ic_chat"
-        android:title="Chat" />
+        android:id="@+id/screeningFragment"
+        android:icon="@drawable/ic_screening"
+        android:title="Screening" />
 </menu>

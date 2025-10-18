@@ -1,8 +1,11 @@
 package com.example.animallover
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -60,11 +63,23 @@ class MainActivity : AppCompatActivity() {
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
+        updateLoginMenuTitle() // Initial setup
 
         navView?.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.settingFragment || menuItem.itemId == R.id.helpFragment) {
                 navController.navigate(menuItem.itemId)
-            } else {
+            }
+            else if (menuItem.itemId == R.id.loginFragment) {
+                if(firebaseAuth.currentUser != null){
+                    firebaseAuth.signOut()
+                    updateLoginMenuTitle() // Update immediately after logout
+                    navController.navigate(menuItem.itemId)
+                }
+                else{
+                    navController.navigate(menuItem.itemId)
+                }
+            }
+            else {
                 NavigationUI.onNavDestinationSelected(menuItem, navController)
             }
 
@@ -76,7 +91,6 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             val currentDestination = navController.currentDestination?.id
 
-            // Don't navigate if already at the destination
             if (currentDestination == item.itemId) {
                 return@setOnItemSelectedListener true
             }
@@ -100,15 +114,59 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            // Update login/logout menu title whenever destination changes
+            updateLoginMenuTitle()
+
             // Update bottom navigation selection without triggering navigation
             bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
 
             // Show/hide bottom navigation
-            if (destination.id == R.id.settingFragment || destination.id == R.id.helpFragment ||
-                destination.id == R.id.registerFragment || destination.id == R.id.loginFragment) {
+            if (destination.id == R.id.settingFragment || destination.id == R.id.helpFragment) {
                 bottomNavigationView.visibility = View.GONE
             } else {
                 bottomNavigationView.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_chat -> {
+                // Check if user is logged in
+                if (firebaseAuth.currentUser != null) {
+                    navController.navigate(R.id.chatFragment)
+                } else {
+                    Toast.makeText(this, "Please login to access chat", Toast.LENGTH_SHORT).show()
+                    navController.navigate(R.id.loginFragment)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateLoginMenuTitle()
+        loadDrawerProfileImage() // Also update profile image
+    }
+
+    private fun updateLoginMenuTitle() {
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+        if(firebaseAuth.currentUser != null){
+            navView?.menu?.findItem(R.id.loginFragment)?.apply {
+                title = "Logout"
+                setIcon(R.drawable.ic_logout)
+            }
+        } else {
+            navView?.menu?.findItem(R.id.loginFragment)?.apply {
+                title = "Login"
+                setIcon(R.drawable.ic_login)
             }
         }
     }
@@ -153,7 +211,6 @@ class MainActivity : AppCompatActivity() {
             profileImageView.setImageResource(R.drawable.cat_icon)
         }
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
