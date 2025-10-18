@@ -1,4 +1,4 @@
-package com.example.animallover
+package com.example.animallover.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.animallover.data.model.Event
+import com.example.animallover.R
 
 class EventAdapter(
     private val events: List<Event>,
@@ -49,7 +51,7 @@ class EventAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_TYPE_EVENT -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_event, parent, false)
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_event_card_home, parent, false)
                 EventViewHolder(view)
             }
             VIEW_TYPE_BUTTON -> {

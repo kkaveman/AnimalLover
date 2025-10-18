@@ -8,8 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
-import com.example.animallover.databinding.FragmentRegisterBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -17,7 +18,7 @@ class RegisterFragment : Fragment() {
 
     private lateinit var progressDialog: ProgressDialog
 
-    private var _binding: FragmentRegisterBinding? = null
+    private var _binding: com.example.animallover.databinding.FragmentRegisterBinding? = null
     private val binding get() = _binding!!
 
     private val firebaseAuth = FirebaseAuth.getInstance()
@@ -26,12 +27,15 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        _binding = com.example.animallover.databinding.FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Hide UI elements immediately
+        hideUIElements()
 
         progressDialog = ProgressDialog(requireContext()).apply {
             setTitle("Registering Account")
@@ -48,6 +52,24 @@ class RegisterFragment : Fragment() {
         binding.buttonRegister.setOnClickListener {
             createAccount()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Hide again in onResume to be extra sure
+        view?.post {
+            hideUIElements()
+        }
+    }
+
+    private fun hideUIElements() {
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.GONE
+    }
+
+    private fun showUIElements() {
+        (activity as? AppCompatActivity)?.supportActionBar?.show()
+        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = View.VISIBLE
     }
 
     private fun createAccount() {
@@ -85,6 +107,10 @@ class RegisterFragment : Fragment() {
                         userMap["username"] = username
                         userMap["email"] = email
                         userMap["bio"] = "Hi! i am yet another a cat lover! meow."
+                        userMap["posts"] = 0
+                        userMap["followers"] = 0
+                        userMap["following"] = 0
+
                         // The 'image' field is intentionally left out.
                         // The app will load a local drawable if this field is missing from the database.
 
@@ -92,7 +118,11 @@ class RegisterFragment : Fragment() {
                             .addOnSuccessListener {
                                 // Database write was successful.
                                 progressDialog.dismiss()
+
+                                firebaseAuth.signOut()
+
                                 Toast.makeText(requireContext(), "Account created.", Toast.LENGTH_SHORT).show()
+
                                 findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
                             }
                             .addOnFailureListener { e ->
@@ -116,6 +146,7 @@ class RegisterFragment : Fragment() {
                             Toast.LENGTH_LONG
                         ).show()
                     }
+
             }
         }
     }
@@ -123,5 +154,6 @@ class RegisterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        showUIElements()
     }
 }

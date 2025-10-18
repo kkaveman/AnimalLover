@@ -1,4 +1,4 @@
-package com.example.animallover.data
+package com.example.animallover.data.model
 
 data class CommunityPost(
     val id: String,
