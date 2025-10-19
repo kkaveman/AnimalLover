@@ -104,6 +104,9 @@
             android:id="@+id/action_communityFragment_to_profileFragment"
             app:destination="@id/profileFragment"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_communityFragment_to_addPostFragment"
+            app:destination="@id/addPostFragment" />
     </fragment>
     <fragment
         android:id="@+id/helpFragment"
@@ -162,4 +165,9 @@
         android:name="com.example.animallover.ChatboxFragment"
         android:label="fragment_chatbox"
         tools:layout="@layout/fragment_chatbox" />
+    <fragment
+        android:id="@+id/addPostFragment"
+        android:name="com.example.animallover.AddPostFragment"
+        android:label="fragment_add_post"
+        tools:layout="@layout/fragment_add_post" />
 </navigation>
