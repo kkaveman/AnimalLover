@@ -9,7 +9,7 @@ import com.example.animallover.R
 import com.example.animallover.data.model.CommunityPost
 import com.example.animallover.databinding.ItemCommunityPostBinding
 
-class CommunityPostAdapter(private val posts: List<CommunityPost>) : RecyclerView.Adapter<CommunityPostAdapter.PostViewHolder>() {
+class CommunityPostAdapter(private val posts: MutableList<CommunityPost>) : RecyclerView.Adapter<CommunityPostAdapter.PostViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = ItemCommunityPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,6 +21,11 @@ class CommunityPostAdapter(private val posts: List<CommunityPost>) : RecyclerVie
     }
 
     override fun getItemCount(): Int = posts.size
+
+    fun addPost(post: CommunityPost) {
+        posts.add(0, post)
+        notifyItemInserted(0)
+    }
 
     inner class PostViewHolder(private val binding: ItemCommunityPostBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(post: CommunityPost) {

@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
             CommunityPost("3", "MeowMix", "", "Does anyone else's cat do this?", "https://i.imgur.com/gA3tF5C.jpeg", 180, 30)
         )
 
-        val adapter = CommunityPostAdapter(popularPosts)
+        val adapter = CommunityPostAdapter(popularPosts.toMutableList())
         binding.popularPostsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.popularPostsRecyclerView.adapter = adapter
         binding.popularPostsRecyclerView.isNestedScrollingEnabled = false // Important for smooth scrolling inside NestedScrollView

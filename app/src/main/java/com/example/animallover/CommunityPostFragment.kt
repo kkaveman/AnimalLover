@@ -34,13 +34,13 @@ class CommunityPostFragment : Fragment() {
 
     private fun setupCommunityPostsRecyclerView() {
         val samplePosts = createSamplePosts()
-        val adapter = CommunityPostAdapter(samplePosts)
+        val adapter = CommunityPostAdapter(samplePosts.toMutableList())
         binding.communityPostsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.communityPostsRecyclerView.adapter = adapter
     }
 
     private fun createSamplePosts(): List<CommunityPost> {
-        return listOf(
+        return mutableListOf(
             CommunityPost(
                 id = "1",
                 userName = "Alex",
