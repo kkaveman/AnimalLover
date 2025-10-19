@@ -55,6 +55,11 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
 
+
+        // Your other dependencies...
+    implementation("org.osmdroid:osmdroid-android:6.1.18")
+// Coroutines for async operations
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     // Other dependencies that might not be in the default catalog
     implementation("androidx.navigation:navigation-fragment-ktx:2.9.4")
     implementation("androidx.navigation:navigation-ui-ktx:2.9.4")

@@ -31,6 +31,9 @@ class CommunityFragment : Fragment() {
         val adapter = CommunityViewPagerAdapter(requireActivity())
         viewPager.adapter = adapter
 
+        // Disable swiping on ViewPager2
+        viewPager.isUserInputEnabled = false
+
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> "Community post"
