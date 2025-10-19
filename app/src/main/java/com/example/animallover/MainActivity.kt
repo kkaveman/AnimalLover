@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.homeFragment,
                 R.id.eventFragment,
                 R.id.communityFragment,
+                R.id.screeningFragment
             ),
             drawerLayout
         )
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             when (item.itemId) {
-                R.id.homeFragment, R.id.eventFragment, R.id.communityFragment, R.id.profileFragment -> {
+                R.id.homeFragment, R.id.eventFragment, R.id.communityFragment, R.id.screeningFragment -> {
                     val navOptions = NavOptions.Builder()
                         .setPopUpTo(R.id.homeFragment, false)
                         .setLaunchSingleTop(true)

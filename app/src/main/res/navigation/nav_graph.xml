@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_homeFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_screeningFragment"
+            app:destination="@id/screeningFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -170,4 +173,22 @@
         android:name="com.example.animallover.AddPostFragment"
         android:label="fragment_add_post"
         tools:layout="@layout/fragment_add_post" />
+    <fragment
+        android:id="@+id/screeningFragment"
+        android:name="com.example.animallover.ScreeningFragment"
+        android:label="fragment_screening"
+        tools:layout="@layout/fragment_screening" >
+        <action
+            android:id="@+id/action_screeningFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_screeningFragment_to_eventFragment"
+            app:destination="@id/eventFragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_screeningFragment_to_communityFragment"
+            app:destination="@id/communityFragment"
+            app:launchSingleTop="true" />
+    </fragment>
 </navigation>
