@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity() {
             bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
 
             // Show/hide bottom navigation
-            if (destination.id == R.id.settingFragment || destination.id == R.id.helpFragment) {
+            if (destination.id == R.id.settingFragment || destination.id == R.id.helpFragment || destination.id == R.id.adminFragment) {
                 bottomNavigationView.visibility = View.GONE
             } else {
                 bottomNavigationView.visibility = View.VISIBLE

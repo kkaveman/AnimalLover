@@ -17,8 +17,9 @@ import com.example.animallover.ui.adapters.UserAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.database.*
 
+import com.google.android.material.bottomnavigation.BottomNavigationView
 class UserCrudFragment : Fragment() {
-
+    private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var recyclerViewUsers: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var textViewEmpty: TextView
@@ -38,6 +39,7 @@ class UserCrudFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         try {
             recyclerViewUsers = view.findViewById(R.id.recyclerViewUsers)
