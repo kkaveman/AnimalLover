@@ -1,3 +1,4 @@
+<!-- item_community_post.xml -->
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -57,12 +58,13 @@
             tools:src="@drawable/ai_cat3"
             tools:visibility="visible" />
 
-        <ImageView
+        <CheckBox
             android:id="@+id/ivLikeIcon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginTop="12dp"
-            android:src="@drawable/ic_favorite"
+            android:background="@android:color/transparent"
+            android:button="@drawable/favorite_icon_selector"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivPostMedia" />
 
