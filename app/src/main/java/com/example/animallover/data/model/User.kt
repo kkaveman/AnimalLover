@@ -1,5 +1,7 @@
 package com.example.animallover.data.model
 
+
+
 class User {
     private var username : String = ""
     private var bio : String = ""

@@ -25,6 +25,16 @@
             android:checkable="false" /> <!-- Make this item specifically non-checkable -->
     </group>
 
+    <group
+        android:id="@+id/menu_admin"
+        android:checkableBehavior="single"> <!-- This group can remain checkable if other items need it -->
+        <item
+            android:id="@+id/adminFragment"
+            android:icon="@drawable/ic_logout"
+            android:title="admin"
+            android:visible="false"/>
+    </group>
+
 
     <group
         android:id="@+id/menu_logout_or_login"

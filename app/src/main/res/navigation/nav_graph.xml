@@ -40,6 +40,9 @@
         <action
             android:id="@+id/action_homeFragment_to_screeningFragment"
             app:destination="@id/screeningFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_adminFragment"
+            app:destination="@id/adminFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -191,4 +194,18 @@
             app:destination="@id/communityFragment"
             app:launchSingleTop="true" />
     </fragment>
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.example.animallover.AdminFragment"
+        android:label="fragment_admin"
+        tools:layout="@layout/fragment_admin" >
+        <action
+            android:id="@+id/action_adminFragment_to_userCrudFragment"
+            app:destination="@id/userCrudFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userCrudFragment"
+        android:name="com.example.animallover.UserCrudFragment"
+        android:label="fragment_user_crud"
+        tools:layout="@layout/fragment_user_crud" />
 </navigation>

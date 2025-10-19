@@ -75,11 +75,15 @@ class MainActivity : AppCompatActivity() {
                 if(firebaseAuth.currentUser != null){
                     firebaseAuth.signOut()
                     updateLoginMenuTitle() // Update immediately after logout
+                    checkAdminRole() // Hide admin menu after logout
                     navController.navigate(menuItem.itemId)
                 }
                 else{
                     navController.navigate(menuItem.itemId)
                 }
+            }
+            else if (menuItem.itemId == R.id.adminFragment) {
+                navController.navigate(menuItem.itemId)
             }
             else {
                 NavigationUI.onNavDestinationSelected(menuItem, navController)
@@ -87,6 +91,17 @@ class MainActivity : AppCompatActivity() {
 
             drawerLayout.closeDrawer(GravityCompat.START)
             true
+        }
+
+        // Listen to authentication state changes
+        firebaseAuth.addAuthStateListener { auth ->
+            if (auth.currentUser != null) {
+                // User logged in, check admin role
+                checkAdminRole()
+            } else {
+                // User logged out, hide admin menu
+                navView?.menu?.findItem(R.id.adminFragment)?.isVisible = false
+            }
         }
 
         // Custom bottom navigation handling to fix back stack issues
@@ -115,9 +130,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        checkAdminRole()
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // Update login/logout menu title whenever destination changes
             updateLoginMenuTitle()
+
+            // Check admin role when navigating (important for after login)
+            if (destination.id == R.id.homeFragment ||
+                destination.id == R.id.eventFragment ||
+                destination.id == R.id.communityFragment ||
+                destination.id == R.id.screeningFragment ||
+                destination.id == R.id.profileFragment) {
+                checkAdminRole()
+            }
 
             // Update bottom navigation selection without triggering navigation
             bottomNavigationView.menu.findItem(destination.id)?.isChecked = true
@@ -156,6 +182,40 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         updateLoginMenuTitle()
         loadDrawerProfileImage() // Also update profile image
+        checkAdminRole() // Check admin role when resuming
+    }
+
+    private fun checkAdminRole() {
+        val navView = findViewById<NavigationView>(R.id.nav_view)
+        val currentUser = firebaseAuth.currentUser
+
+        if (currentUser != null) {
+            val usersRef = FirebaseDatabase.getInstance("https://cat-app-4922a-default-rtdb.asia-southeast1.firebasedatabase.app")
+                .reference.child("Users").child(currentUser.uid)
+
+            usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        // Get role value (default to 0 if not found)
+                        val role = snapshot.child("role").getValue(Int::class.java) ?: 0
+
+                        // Show admin menu if role is 1, hide if role is 0
+                        navView?.menu?.findItem(R.id.adminFragment)?.isVisible = (role == 1)
+                    } else {
+                        // User data doesn't exist, hide admin menu
+                        navView?.menu?.findItem(R.id.adminFragment)?.isVisible = false
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // On error, hide admin menu for safety
+                    navView?.menu?.findItem(R.id.adminFragment)?.isVisible = false
+                }
+            })
+        } else {
+            // No user logged in, hide admin menu
+            navView?.menu?.findItem(R.id.adminFragment)?.isVisible = false
+        }
     }
 
     private fun updateLoginMenuTitle() {
@@ -193,6 +253,11 @@ class MainActivity : AppCompatActivity() {
             val usersRef = FirebaseDatabase.getInstance("https://cat-app-4922a-default-rtdb.asia-southeast1.firebasedatabase.app").reference.child("Users").child(currentUser.uid)
             usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+                    if(snapshot.exists()){
+                        val username = snapshot.child("username").getValue(String::class.java)
+                        val email = snapshot.child("email").getValue(String::class.java)
+
+                    }
                     val imageUrl = snapshot.child("image").getValue(String::class.java)
                     if (!imageUrl.isNullOrEmpty()) {
                         Glide.with(this@MainActivity)

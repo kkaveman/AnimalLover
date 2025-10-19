@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.animallover.databinding.FragmentCommunityBinding
+import com.example.animallover.ui.adapters.CommunityViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class CommunityFragment : Fragment() {

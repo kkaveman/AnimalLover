@@ -110,6 +110,7 @@ class RegisterFragment : Fragment() {
                         userMap["posts"] = 0
                         userMap["followers"] = 0
                         userMap["following"] = 0
+                        userMap["role"] = 0
 
                         // The 'image' field is intentionally left out.
                         // The app will load a local drawable if this field is missing from the database.
