@@ -71,11 +71,7 @@ class SettingFragment : Fragment() {
             // TODO: Navigate to a language selection screen
         }
 
-        // Help & Support Setting
-        binding.labelHelp.setOnClickListener {
-            Toast.makeText(requireContext(), "Help & Support clicked", Toast.LENGTH_SHORT).show()
-            // TODO: Navigate to a help screen or open a support web page
-        }
+
     }
 
     override fun onDestroyView() {
