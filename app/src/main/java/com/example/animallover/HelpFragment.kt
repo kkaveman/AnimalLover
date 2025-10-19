@@ -5,55 +5,42 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.animallover.adapter.FaqAdapter
+import com.example.animallover.databinding.FragmentHelpBinding
+import com.example.animallover.model.Faq
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HelpFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HelpFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private var _binding: FragmentHelpBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_help, container, false)
+        _binding = FragmentHelpBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HelpFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HelpFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val faqList = listOf(
+            Faq("How do I reset my password?", "You can reset your password by going to the settings page and clicking on 'Reset Password'."),
+            Faq("How do I change my email address?", "You can change your email address in the account settings."),
+            Faq("Is my data secure?", "We take data security very seriously. Please read our privacy policy for more information."),
+            Faq("How do I delete my account?", "You can delete your account from the settings page. This action is irreversible."),
+            Faq("How to contact support?", "You can contact us via email at support@animallover.com or call us at +123456789")
+        )
+
+        val adapter = FaqAdapter(faqList)
+        binding.faqRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.faqRecyclerView.adapter = adapter
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
