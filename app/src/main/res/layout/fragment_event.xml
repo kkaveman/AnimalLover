@@ -13,6 +13,6 @@
         android:layout_marginBottom="100dp"
         android:clipToPadding="false"
         tools:listitem="@layout/item_event_card"
-        android:padding="8dp" />
+        android:padding="9dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
