@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.core.view.doOnLayout
@@ -17,7 +16,7 @@ import com.example.animallover.data.model.CommunityPost
 import com.example.animallover.data.model.Event
 import com.example.animallover.databinding.FragmentHomeBinding
 import com.example.animallover.ui.adapters.CommunityPostAdapter
-import com.example.animallover.ui.adapters.EventAdapter
+import com.example.animallover.ui.adapters.EventHomeAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -68,17 +67,17 @@ class HomeFragment : Fragment() {
     private fun setupEventsRecyclerView() {
         binding.eventsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         val events = listOf(
-            Event(R.drawable.ai_cat, "Cat Show 2024"),
-            Event(R.drawable.cat_event_placeholder, "Adoption Day"),
-            Event(R.drawable.cat_event_placeholder, "Feline Health Webinar"),
-            Event(R.drawable.cat_event_placeholder, "Cute Cat Contest"),
-            Event(R.drawable.cat_event_placeholder, "Community Meetup")
+            Event(R.drawable.ai_cat, "Cat Show 2024", "Who has the best Cat?","23 February 2026"),
+            Event(R.drawable.cat_event_placeholder, "Adoption Day", "Lets Adopt Cats","11 January 2026"),
+            Event(R.drawable.cat_event_placeholder, "Feline Health Webinar","lets Care for our cats","18 July 2026"),
+            Event(R.drawable.cat_event_placeholder, "Cute Cat Contest","Which is the cutest cat?","16 August 2026"),
+            Event(R.drawable.cat_event_placeholder, "Community Meetup","lets meetup!","12 December 2026")
         )
 
-        val eventAdapter = EventAdapter(events.take(3)) {
+        val eventHomeAdapter = EventHomeAdapter(events.take(3)) {
             findNavController().navigate(R.id.action_homeFragment_to_eventFragment)
         }
-        binding.eventsRecyclerView.adapter = eventAdapter
+        binding.eventsRecyclerView.adapter = eventHomeAdapter
     }
 
     private fun setupClickListeners() {

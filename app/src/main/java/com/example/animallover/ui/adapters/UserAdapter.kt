@@ -70,7 +70,7 @@ class UserAdapter(
         android.util.Log.d("UserAdapter", "Parent: $parent")
 
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_user, parent, false)
+            .inflate(R.layout.item_crud_user, parent, false)
 
         android.util.Log.d("UserAdapter", "View inflated: $view")
         android.util.Log.d("UserAdapter", "View dimensions: ${view.layoutParams?.width}x${view.layoutParams?.height}")
